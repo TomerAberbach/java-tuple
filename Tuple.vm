@@ -1,0 +1,241 @@
+#* @vtlvariable name="PACKAGE_NAME" type="java.lang.String" *#
+#* @vtlvariable name="NAME" type="java.lang.String" *#
+#* @vtlvariable name="Size" type="java.lang.String" *#
+
+## Static
+#set($Integer = 0)
+#set($alphabet = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" ])
+#set($ordinals = [ "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twentyOne", "twentyTwo", "twentyThree", "twentyFour", "twentyFive", "twentySix" ])
+
+## Loops
+#set($item = "")
+#set($i = 0)
+#set($j = 0)
+
+## Input
+#set($size = $Integer.parseInt($Size))
+#set($alphabet = $alphabet.subList(0, $size))
+#set($ordinals = $ordinals.subList(0, $size))
+#set($size = $size - 1)
+
+## Generation
+#if(!$PACKAGE_NAME.isEmpty())
+    package $PACKAGE_NAME;
+#end
+
+#if($size >= 0)
+    import java.util.Arrays;
+    #if($size == 0)
+        import java.util.Collections;
+    #end
+    import java.util.List;
+    import java.util.function.Consumer;
+    import java.util.function.Function;
+    import java.util.stream.Stream;
+
+    #set($generics = "<$alphabet.get(0)")
+    #foreach($i in [ 1 .. $size ])
+        #set($generics = $generics + ", $alphabet.get($i)")
+    #end
+    #set($generics = $generics + ">")
+    /**
+     * Class representing a ${ordinals.get($size)}-tuple.
+     */
+    public final class $NAME$generics {
+        #foreach($i in [ 0 .. $size ])
+            /**
+             Element at position $ordinals.get($i) of this {@link $NAME}.
+             */
+            private final $alphabet.get($i) $ordinals.get($i);
+        #end
+
+
+        #foreach($i in [ -1 .. $size ])
+            /**
+                #if($i >= 0)
+                    #foreach($j in [ 0 .. $i ])
+             * @param $ordinals.get($j) {@link ${NAME}#$ordinals.get($j)}.
+                    #end
+                #else
+             * Sets all fields to null.
+                #end
+             */
+            public $NAME(
+                #if($i >= 0)
+                    $alphabet.get(0) $ordinals.get(0)
+                    #if($i >= 1)
+                        #foreach($j in [ 1 .. $i ])
+                            , $alphabet.get($j) $ordinals.get($j)
+                        #end
+                    #end
+                #end
+            ) {
+            #if($i == $size)
+                #foreach($j in [ 0 .. $size ])
+                    this.$ordinals.get($j) = $ordinals.get($j);
+                #end
+            #else
+                this(
+                    #if($i >= 0)
+                        $ordinals.get(0)
+                    #else
+                        null
+                    #end
+                    #foreach($j in [ 1 .. $size ])
+                        ,
+                        #if($i >= $j)
+                            $ordinals.get($j)
+                        #else
+                            null
+                        #end
+                    #end
+                );
+            #end
+            }
+        #end
+
+
+        #foreach($i in [ 0 .. $size ])
+            /**
+             * @return {@link ${NAME}#$ordinals.get($i)}.
+             */
+            public $alphabet.get($i) $ordinals.get($i)() {
+                return $ordinals.get($i);
+            }
+        #end
+
+
+        /**
+         * @return {@link List} containing the elements of this {@link $NAME}.
+         */
+        public List<Object> asList() {
+            return
+                #if($size == 0)
+                    Collections.singletonList($ordinals.get(0))
+                #else
+                    Arrays.asList(
+                        $ordinals.get(0)
+                        #if($size >= 1)
+                            #foreach($i in [ 1 .. $size ])
+                                , $ordinals.get($i)
+                            #end
+                        #end
+                    )
+                #end
+            ;
+        }
+
+        #foreach($i in [ 0 .. $size ])
+            #set($generics = $generics.replace("$alphabet.get($i)", "$alphabet.get($i)$alphabet.get($i)"))
+        #end
+        /**
+         * @return A {@link $NAME} consisting of the results of applying the given functions to the elements of this {@link $NAME}.
+         */
+        public $generics $NAME$generics map(
+            Function<? super $alphabet.get(0), ? extends $alphabet.get(0)$alphabet.get(0)> $ordinals.get(0)Mapper
+            #if($size >= 1)
+                #foreach($i in [ 1 .. $size ])
+                , Function<? super $alphabet.get($i), ? extends $alphabet.get($i)$alphabet.get($i)> $ordinals.get($i)Mapper
+                #end
+            #end
+        ) {
+            return new $NAME<>(
+                ${ordinals.get(0)}Mapper.apply($ordinals.get(0))
+                #if($size >= 1)
+                    #foreach($i in [ 1 .. $size ])
+                    , ${ordinals.get($i)}Mapper.apply($ordinals.get($i))
+                    #end
+                #end
+            );
+        }
+
+        /**
+         * Performs the given actions to the elements of this {@link $NAME} until all elements have been processed or the action throws an exception.
+         */
+        public void forEach(
+            Consumer<? super $alphabet.get(0)> $ordinals.get(0)Consumer
+            #if($size >= 1)
+                #foreach($i in [ 1 .. $size ])
+                    , Consumer<? super $alphabet.get($i)> $ordinals.get($i)Consumer
+                #end
+            #end
+        ) {
+            #foreach($i in [ 0 .. $size ])
+                ${ordinals.get($i)}Consumer.accept($ordinals.get($i));
+            #end
+        }
+
+        #if($size > 0)
+            /**
+             * Performs the given action for each element of this {@link $NAME} until all elements have been processed or the action throws an exception.
+             */
+            public void forEach(Consumer<? super Object> consumer) {
+                asList().forEach(consumer);
+            }
+        #end
+
+        /**
+         * @return {@link Stream} containing the elements of this {@link $NAME}.
+         */
+        public Stream<Object> stream() {
+            return asList().stream();
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            } else if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            #set($class = "$NAME<?")
+            #foreach($i in [ 1 .. $size ])
+                #set($class = $class + ", ?")
+            #end
+            #set($class = $class + ">")
+
+            #set($local = "$NAME.toLowerCase()")
+            #if($NAME.toLowerCase() == $NAME)
+                #set($local = $local + "0")
+            #end
+            $class $local = ($class)o;
+
+            return
+                ($ordinals.get(0) == null ? ${local}.$ordinals.get(0) == null : ${ordinals.get(0)}.equals(${local}.$ordinals.get(0)))
+                #if($size >= 1)
+                    #foreach($i in [ 1 .. $size ])
+                    && ($ordinals.get($i) == null ? ${local}.$ordinals.get($i) == null : ${ordinals.get($i)}.equals(${local}.$ordinals.get($i)))
+                    #end
+                #end
+            ;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            #foreach($i in [ 0 .. $size ])
+                hash = 31 * hash + ($ordinals.get($i) == null ? 0 : ${ordinals.get($i)}.hashCode());
+            #end
+            return hash;
+        }
+
+        @Override
+        public String toString() {
+            return "(" +
+                $ordinals.get(0)
+                #if($size >= 1)
+                    #foreach($i in [ 1 .. $size ])
+                        + ", " + $ordinals.get($i)
+                    #end
+                #end
+            + ")";
+        }
+    }
+#else
+    /**
+     * Class representing sadness.
+     */
+    public final class $NAME { }
+#end
