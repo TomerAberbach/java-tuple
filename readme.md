@@ -4,4 +4,4 @@
 
 ## License
 
-[MIT](https://github.com/TomerAberbach/java-tuple/blob/master/license) © [Tomer Aberbach](https://github.com/TomerAberbach)
+[MIT](https://github.com/TomerAberbach/java-tuple/blob/main/license) © [Tomer Aberbach](https://github.com/TomerAberbach)
